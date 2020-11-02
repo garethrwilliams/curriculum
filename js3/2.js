@@ -12,9 +12,20 @@
  * @return {array} arr
  */
 
-const solution = (num1, num2) => {
-  return []
+const makeRow = (input, i, j=0, result=[]) => {
+  if (j === input) return result
+  result.push({x: j, y: i}) 
+  return makeRow(input, i, j+1, result)
 }
+
+const solution = (num1, num2, i=0, result=[]) => {
+  if (num1 === i) return result
+
+  result.push(makeRow(num2, i))
+  return solution(num1, num2, i+1, result)
+}
+
+
 
 module.exports = {
   solution
