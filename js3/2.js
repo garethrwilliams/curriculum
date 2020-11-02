@@ -26,8 +26,6 @@ const solution = (num1, num2, i=0, result=[]) => {
 }
 
 
-
-
 module.exports = {
   solution
 }
