@@ -1,3 +1,28 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const solution = (arr) => {
     return (obj) => {
         return arr.reduce( (acc, e) => {
