@@ -14,10 +14,7 @@ const solution = (arr, num) => {
         return match(e, arr, num, i+1)
     }
     return arr.reduce( (acc, e) => {
-        if (match(e, arr, num)) {
-            return acc = true
-        } else { return acc = false 
-        }
+        return match(e, arr, num)
     }, '')
 
   }
