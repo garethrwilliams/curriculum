@@ -7,8 +7,22 @@
  */
 
 const solution = (arr, num) => {
-  return true
+  if (arr.length === 0) return false
+  const match = (e, arr, num, i=0) => {
+      if (i === arr.length) return false
+      if (e + arr[i] === num) return true
+      return match(e, arr, num, i+1)
+  }
+  return arr.reduce( (acc, e) => {
+      if (match(e, arr, num)) {
+          return acc = true
+      } else { return acc = false 
+      }
+  }, '')
+
 }
+
+
 
 module.exports = {
   solution
