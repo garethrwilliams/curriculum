@@ -6,20 +6,6 @@
  * @returns {boolean}
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
 const solution = (arr, num) => {
     if (arr.length === 0) return false
     const match = (e, arr, num, i=0) => {
