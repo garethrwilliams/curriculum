@@ -5,8 +5,15 @@
 */
 
 const solution = (arr) => {
-  return []
-}
+  const duplicates = arr.reduce( (acc, e) => {
+       acc[0][e] = (acc[0][e] || 0) + 1
+       if (acc[0][e] === 2) {
+           acc[1].push(e)
+       }
+       return acc
+   }, [{}, []])
+   return duplicates[1]
+   }
 
 module.exports = {
   solution
