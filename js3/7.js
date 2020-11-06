@@ -14,7 +14,7 @@ const solution = () => {
 
 
 module.exports = {
-  solution
+  solution 
 }
 
 
