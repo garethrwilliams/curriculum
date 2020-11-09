@@ -1,0 +1,39 @@
+<button class="previous">previous</button>
+<button class="next">next</button>
+<div class="display"></div>
+
+<script>
+    const display = document.querySelector('.display')
+    
+    const render = async (url) => {
+        if (!url) return 
+        const pokemons = await fetch(url).then ( r => r.json())
+
+        const pokemonsList =  await Promise.all(
+            pokemons.results.map( (pokemon) => {
+                return fetch(pokemon.url).then ( r => r.json())
+            })
+        )
+        display.innerHTML = pokemonsList.reduce( (acc, e) => {
+            return `
+            ${acc}
+            <h1><p>${e.name}</p>
+            <img src="${e.sprites.front_default}" async/><h1>
+                `
+            }, ``)
+
+            document.querySelector('.previous').onclick = () => {
+                render(pokemons.previous)
+            }
+            document.querySelector('.next'). onclick = () => {
+                render(pokemons.next)
+            }
+
+        }
+
+        render('https://pokeapi.co/api/v2/pokemon/')
+
+
+
+
+</script> 
