@@ -27,7 +27,7 @@
     </head>
 
 <body>
-    <div class="container">
+    <div id="container">
         <div id="innerContainer">
             <img id='image' src='https://www.c0d3.com/challenges/assets/fair/small.jpg' alt="">
         </div>
@@ -40,17 +40,17 @@
 
 
     <script>
-       const XR =  1263 / 421
-       const YR = 503 / 168
+       const XR =  3 //1263 / 421
+       const YR = 3 //503 / 168
 
-       image.onmousemove = (e) => {
+       container.onmousemove = (e) => {
            scopeContainer.style.display = "block"
            const offsetX = e.offsetX
            const offsetY = e.offsetY
            scopeContainer.style.top = `${e.clientY - 100}px`
            scopeContainer.style.left = `${e.clientX - 100}px`
-           scopeContainer.style.backgroundPositionY = `${-offsetY * YR + 100}px`
-           scopeContainer.style.backgroundPositionX = `${-offsetX * XR + 100}px`
+           //scopeContainer.style.backgroundPositionY = `${-offsetY * YR + 100}px`
+           //scopeContainer.style.backgroundPositionX = `${-offsetX * XR + 100}px`
 
            console.log("x", e.offsetX, "Y", e.offsetY)
 
@@ -58,7 +58,7 @@
        }
 
        image.onmouseout = () => {
-           scopeContainer.style.display = "none"
+           //scopeContainer.style.display = "none"
        }
 
 
