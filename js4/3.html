@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lan='en'>
+    <head>
+        <title></title>
+        <style>
+            
+            #innerContainer {
+                margin: auto;
+                height: 168px;
+                width: 503px;
+                cursor: none;
+            }
+             
+            
+            #scopeContainer {
+                position: fixed;
+                background: url(https://www.c0d3.com/challenges/assets/fair/big.jpg);
+                background-repeat: no-repeat;
+                height: 200px;
+                width: 200px;
+                border-radius: 50%;
+                display: none;
+                pointer-events: none;
+                clip-path: circle(99px at center);
+                }
+        </style>
+    </head>
+
+<body>
+    <div id="container">
+        <div id="innerContainer">
+            <img id='image' src='https://www.c0d3.com/challenges/assets/fair/small.jpg' alt="">
+        </div>
+    </div>
+        <div id="scopeContainer">
+            <img id="scope" src='https://www.c0d3.com/challenges/assets/fair/scope.png' alt="">
+        </div>
+
+    
+
+
+    <script>
+       const XR =  3 //1263 / 421
+       const YR = 3 //503 / 168
+
+       container.onmousemove = (e) => {
+           scopeContainer.style.display = "block"
+           const offsetX = e.offsetX
+           const offsetY = e.offsetY
+           scopeContainer.style.top = `${e.clientY - 100}px`
+           scopeContainer.style.left = `${e.clientX - 100}px`
+           scopeContainer.style.backgroundPositionY = `${-offsetY * YR + 100}px`
+           scopeContainer.style.backgroundPositionX = `${-offsetX * XR + 100}px`
+
+           console.log("x", e.offsetX, "Y", e.offsetY)
+
+
+       }
+
+       image.onmouseout = () => {
+           scopeContainer.style.display = "none"
+       }
+
+
+
+
+        
+
+
+    </script>
+</body>
+</html>
