@@ -49,8 +49,8 @@
            const offsetY = e.offsetY
            scopeContainer.style.top = `${e.clientY - 100}px`
            scopeContainer.style.left = `${e.clientX - 100}px`
-           //scopeContainer.style.backgroundPositionY = `${-offsetY * YR + 100}px`
-           //scopeContainer.style.backgroundPositionX = `${-offsetX * XR + 100}px`
+           scopeContainer.style.backgroundPositionY = `${-offsetY * YR + 100}px`
+           scopeContainer.style.backgroundPositionX = `${-offsetX * XR + 100}px`
 
            console.log("x", e.offsetX, "Y", e.offsetY)
 
@@ -58,7 +58,7 @@
        }
 
        image.onmouseout = () => {
-           //scopeContainer.style.display = "none"
+           scopeContainer.style.display = "none"
        }
 
 
