@@ -29,63 +29,70 @@
     <div class="container">
         <div class="stars" >
         </div>
-        <div class="text">You are giving 0 stars!</div>
+        <div>You <span id="tense"> are giving</span> <span id="number">0</span> stars!</div>
     </div>
 
     <script>
-        const text = document.querySelector('.text')
-        let selectionLocked = false
 
-        const runXTimes = (x, func, count = 0) => {
-            if (count === x) return;
-            func(count)
-            console.log(count)
-            return runXTimes(x, func, count + 1)
+        const runXTimes = (target, func, start = 0) => {
+            if (start >= target) return;
+            func(start)
+            return runXTimes(target, func, ++start)
         }
 
-        function Star (x) {
-            const element = document.createElement('i')
-            element.className = "far fa-star"
-            element.id = `${x+1}star`
-            element.setAttribute('onmouseover', `Stars(${x+1})`)
-            document.querySelector('.stars').appendChild(element)
-        }
+        let elements = [] , selectionLocked = false
 
-        runXTimes(5, Star)
-
-
-        const light = (i) => {
-                if (i === 0) return 
-                let id = i.toString() + "star"
-                document.getElementById(id).className = "fas fa-star"
-                return light(i-1)
-        }
-        const dim = (i) => {
-                if (i > 5) return
-                let id = i.toString() + "star"
-                document.getElementById(id).className = "far fa-star"
-                return dim(i+1)
-        }
-
-        function Stars (num) {
-            if (selectionLocked) return
-            light(num)
-            dim(num+1)
-            text.innerText = `You are giving ${num} stars!`
-            document.querySelector('.stars').addEventListener('click', (e) => {
-                text.innerText = `You have given ${num} stars!`
-                selectionLocked = true
-            })
-        }
-
-        
-
-        document.querySelector('.stars').addEventListener('mouseleave', () => {
+        document.querySelector('.stars').onmouseenter = () => {
             selectionLocked = false
-        })
-        
+            tense.innerText = 'are giving'
+        }
 
-        
+
+        function Star (index) {
+
+            this.toggle = (add, remove) => {
+                this.element.classList.add(add)
+                this.element.classList.remove(remove)
+            }
+
+            this.newCount = () => {
+                const count = index + 1
+
+                runXTimes(count, (i) => {
+                    elements[i].toggle('fas', 'far')
+                    console.log(elements[i].element)
+                    //elements[i].element.classList.toggle('fas')
+                    //elements[i].element.classList.toggle('far')
+                    // tried this but I don't think I can access the element this way
+                })
+                
+                runXTimes( 5, (i) => {
+                    elements[i].toggle('far', 'fas')
+                })
+
+                number.innerText = count
+            }
+
+            this.element = document.createElement('i')
+            this.element.className = 'far fa-star'
+            this.element.onmouseenter = () => {
+                if(selectionLocked) return
+                this.newCount()
+            }
+            this.element.onclick = () => {
+                selectionLocked = true
+                tense.innerText = 'have given'
+                this.newCount()
+            }
+            document.querySelector('.stars').appendChild(this.element)
+        }
+
+        runXTimes( 5, (i) => {
+            elements.push(new Star(i))
+        })
+
+        console.log(elements)
+
     </script>
 
 </body>
