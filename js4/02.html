@@ -37,7 +37,7 @@
         const runXTimes = (target, func, start = 0) => {
             if (start >= target) return;
             func(start)
-            return runXTimes(target, func, ++start)
+            return runXTimes(target, func, start + 1)
         }
 
         let elements = [] , selectionLocked = false
@@ -48,30 +48,29 @@
         }
 
 
-        function Star (index) {
-
-            this.toggle = (add, remove) => {
-                this.element.classList.add(add)
-                this.element.classList.remove(remove)
+        
+      function Star(index) {
+      
+            this.toggle = (remove, add) => {
+            this.element.classList.remove(remove)
+            this.element.classList.add(add)
             }
 
             this.newCount = () => {
-                const count = index + 1
+             const count = index + 1
 
+        
                 runXTimes(count, (i) => {
-                    elements[i].toggle('fas', 'far')
-                    console.log(elements[i].element)
-                    //elements[i].element.classList.toggle('fas')
-                    //elements[i].element.classList.toggle('far')
-                    // tried this but I don't think I can access the element this way
-                })
-                
-                runXTimes( 5, (i) => {
-                    elements[i].toggle('far', 'fas')
-                })
+                elements[i].toggle('far', 'fas')
+                });
 
-                number.innerText = count
-            }
+        
+                runXTimes(5, (i) => {
+                elements[i].toggle('fas', 'far');
+                }, count);
+        
+                number.innerText = count;
+            }   
 
             this.element = document.createElement('i')
             this.element.className = 'far fa-star'
@@ -79,11 +78,13 @@
                 if(selectionLocked) return
                 this.newCount()
             }
+
             this.element.onclick = () => {
                 selectionLocked = true
                 tense.innerText = 'have given'
                 this.newCount()
             }
+
             document.querySelector('.stars').appendChild(this.element)
         }
 
