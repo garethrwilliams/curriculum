@@ -34,10 +34,11 @@
 
     <script>
 
-        const runXTimes = (target, func, start = 0) => {
-            if (start >= target) return;
-            func(start)
-            return runXTimes(target, func, start + 1)
+        function runXTimes (target, func, count= 0) {
+            for (count ; count < target ; ++count) {
+                console.log(count)
+                func(count)
+            } 
         }
 
         let elements = [] , selectionLocked = false
@@ -76,6 +77,7 @@
             this.element.className = 'far fa-star'
             this.element.onmouseenter = () => {
                 if(selectionLocked) return
+                console.log(elements)
                 this.newCount()
             }
 
