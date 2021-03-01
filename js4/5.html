@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lan='en'>
+    <head>
+        <meta charset="UTF-8">
+        <title>Kanban Board</title>
+        <style>
+            body {
+                display: flex;
+                margin-top: 30px;
+            }
+            .container {
+                display: inline-block;
+                width: 25%;
+                margin-left: 30px;
+            }
+            .container:last-of-type {
+                margin-right: 30px;
+            }
+            .header {
+                background-color: red;
+                text-align: center;
+                color: white;
+                padding: 10px;
+            }
+            .todoContainer {
+                display: flex;
+                justify-content: stretch;
+                width: 100%;
+                background-color: #eee;
+                margin-bottom: 5px;
+                word-break: break-all;
+            }
+            .textContainer {
+                display: flex;
+            }
+            .submit {
+                background-color: grey;
+                padding: 5px;
+            }
+            textarea {
+                height: 100px;
+                width: 100%;
+                display: inline-block;
+            }
+            .todoContainer .left, .todoContainer .right {
+                display: inline-block;
+                height: 100%;
+                background-color: #eee;
+                cursor: pointer;
+                margin: 10px;
+                align-self: center;
+                
+            }
+            .todoContainer .centre {
+                width: 100%;
+                margin: 10px 0;
+            }
+            #undo {
+                position: fixed;
+                bottom: 0px;
+                right: 0px;
+                padding: 20px;
+    
+            }
+        </style>
+    </head>
+    <body>
+    </body>
+
+        <script>
+
+            let undoStack = [] 
+            let data = null
+            const kanbanTemplate = [
+                {color: "#35235D", header: "To-do", todos: [] },
+                {color: "#CB2402", header: "Doing", todos: [] },
+                {color: "#4C49A2", header: "Done", todos: [] },
+                {color: "#A31A48", header: "Approved", todos: [] },
+            ]
+
+
+            function UndoItem (perform, data) {
+                this.perform = perform,
+                this.data = data
+            }
+
+            function ActionItem (perform, data) {
+                this.perform = perform,
+                this.data = data
+            }
+
+            function makeContainer () {
+                for (i = 0; i < (data ? data.length : kanbanTemplate.length) ; i++) {
+                    const container = document.createElement('div')
+                    container.classList.add("container")
+                    document.querySelector('body').appendChild(container)
+                    if (i === 3) {
+                        const undo = document.createElement('button')
+                        undo.id = "undo"
+                        undo.innerText = "undo"
+                        document.querySelector('body').appendChild(undo)
+                    }
+                }
+            } ; makeContainer()
+
+
+            const render = (idx) => {
+                const task = data[idx]
+                const container = document.querySelectorAll('.container')[idx]
+                
+
+                const left = idx == 0 ? '' : '&#60;'
+                const right = idx == data.length - 1 ? '' : '&#62;'
+
+                const todos = data[idx].todos.reduce( (acc, e, i) => {
+                    return acc += `
+                    <div class="todoContainer">
+                    <div class="left arrow" data-column="${idx}" data-index="${i}">${left}</div>
+                    <div class="centre" data-column="${idx}" data-index="${i}">${e}</div>
+                    <div class="right arrow" data-column="${idx}" data-index="${i}">${right}</div>
+                    </div>
+                    `
+                }, '') // column, i = todo index
+
+                container.innerHTML = `
+                    <div class="header" style="background: ${task.color}">${task.header}</div>
+                    ${todos}
+                    <div class="textContainer">
+                        <textarea name="" rows="5" id="textArea-${idx}" class="textArea"></textarea>
+                        <button data-column="${idx}" class="submit">Submit</button>
+                    </div>
+                `
+
+                container.onclick = e => {
+                    const target = e.target.classList // submit / left arrow / right arrow / centre
+                    if (!target.contains('arrow') && !target.contains('centre') && !target.contains('submit')) 
+                    return
+                    const columnId = parseInt(e.target.dataset.column) // todo column
+                
+                    // add todo
+                    if (target.contains('submit')) {
+                        const element = document.getElementById(`textArea-${columnId}`) // correct submit area selected
+                        if (!element.value.length) return
+                        const todo = element.value
+                        const lastTodo = performAction(new ActionItem('add', {columnId, todo})) // new length of todo array
+                        undoStack.push(new UndoItem("delete", {
+                            columnId, 
+                            todoIndex: lastTodo - 1, // last todo added to array
+                        }))
+                        element.value = ''
+                    }
+                    const todoIndex = +e.target.dataset.index
+                    console.log(todoIndex)
+                    if (target.contains('centre')) {
+                        if (!window.confirm(`Are you sure you want to remove ${data[columnId].todos[todoIndex]}?`)) {
+                            return
+                        }
+                        undoStack.push(new UndoItem('add', {
+                            todo: performAction(new ActionItem('delete', {columnId, todoIndex})), // todo data!
+                            columnId
+                        }))
+                    }
+
+                    // swap item
+                    if (target.contains('arrow')) {
+                        const newColumn = target.contains('left') ? columnId - 1 : columnId + 1
+                        const newTodoIndex = performAction(new ActionItem('swap', {
+                            columnId, // the current column
+                            todoIndex, // the current todo index
+                            newColumn, // the new column
+                            newTodoIndex: data[newColumn].todos.length // the last todo index of the new column
+                        }))
+                        undoStack.push(new UndoItem('swap', { // reverse the previous changes!
+                            columnId: newColumn,
+                            todoIndex: newTodoIndex,
+                            newColumn: columnId,
+                            newTodoIndex: todoIndex
+                        }))
+                    }
+                }
+                
+            }
+
+            const localData = localStorage.getItem('kanban')
+            data = localData ? JSON.parse(localData) : kanbanTemplate
+            data.forEach((e, i) => render(i))   
+            
+            undo.onclick = () => {
+                const todo = undoStack.pop()
+                console.log(undoStack, todo)
+                if (!todo) {
+                    alert("There are no more items to undo")
+                }
+                performAction(todo)
+                localStorage.setItem('kanban', JSON.stringify(data))
+            }
+
+
+            
+            
+
+
+
+            function performAction (action) {
+                const selectedColumn = data[action.data.columnId].todos
+                //console.log(action.data.columnId)
+                let result = ''
+                switch (action.perform) {
+                    case 'add':
+                        result = selectedColumn.push(action.data.todo)
+                        break
+                    case 'delete': 
+                        result = selectedColumn.splice(action.data.todoIndex, 1)
+                        break
+                    case 'swap':
+                        const todo = selectedColumn.splice(action.data.todoIndex, action.data.todoIndex + 1) // remove the todo from current column
+                        const secondColumn = data[action.data.newColumn].todos // get new column
+                        secondColumn.splice(action.data.newTodoIndex, 0, todo) // add todo
+                        result = secondColumn.length - 1 // return the last todo index
+                        render(action.data.newColumn)
+                        break
+                }
+                render(action.data.columnId)
+                console.log(data)
+                localStorage.setItem('kanban', JSON.stringify(data))
+                return result
+                
+            }
+
+            
+
+
+            
+
+
+
+            
+
+
+
+
+
+
+
+            
+
+            
+
+
+
+
+        </script>
+    </body>
+</html>
+
+
