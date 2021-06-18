@@ -1,18 +1,15 @@
-const express = require('express');
-const app = express();
-const fs = require('fs');
-app.use(express.static('public'));
+const express = require('express')
+const app = express()
+const challenge1 = require('./challenge1.js')
 
+app.use('/', challenge1)
+
+
+app.use(express.static('public'))
 app.get('/', (req, res) => {
-  fs.readdir(`${__dirname}/public`, (err, files) => {
-    res.send( files.reduce((acc, f) => {
-      return acc + `
-      <div>
-        <a href="/${f}" target="__blank">${f}</a>
-      </div>
-      `
-    }, ''));
-  });
+  res.send('hello');
 });
 
-app.listen(process.env.PORT || 8123);
+
+
+app.listen(process.env.PORT || 3000, () => console.log("app listening: 3000"));
