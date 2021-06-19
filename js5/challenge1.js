@@ -1,3 +1,6 @@
+//Please use garethrwilliams.freedomains.dev to test
+
+
 const express = require('express')
 const router = express.Router()
 const cors = require('cors')
