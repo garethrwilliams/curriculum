@@ -6,7 +6,7 @@ const router = express.Router()
 const cors = require('cors')
 const fetch = require('node-fetch')
 const fs = require('fs')
-router.use(cors())
+//router.use(cors())
 let locationData = {}
 let stats = {}
 
