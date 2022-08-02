@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lan="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Test</title>
+    <style>
+      div {
+        height: 200px;
+        width: 200px;
+      }
+      .one {
+        position: relative;
+        background: red;
+        left: 100px;
+        /* z-index: 100; */
+      }
+
+      .two {
+        position: absolute;
+        background-color: blue;
+        z-index: -1;
+        left: 50px;
+        top: 50px;
+      }
+
+      .three {
+        position: absolute;
+        background-color: green;
+        z-index: -1;
+        left: 50px;
+        top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="one">
+      <div class="two">
+        <div class="three"></div>
+      </div>
+    </div>
+  </body>
+</html>
